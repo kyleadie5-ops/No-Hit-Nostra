@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>No Hit Nostra</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a1a;min-height:100vh;padding:16px 16px 60px}
+h1{font-size:17px;font-weight:600;color:#111;margin-bottom:2px}
+.sub{font-size:12px;color:#888;margin-bottom:18px}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tab{flex:1;padding:9px 0;border-radius:10px;border:1px solid #dde1e7;font-size:13px;font-weight:500;cursor:pointer;background:#fff;color:#666;text-align:center}
+.tab.on{background:#1a2840;color:#e8f0ff;border-color:#1a2840}
+.pane{display:none}
+.pane.on{display:block}
+.panel{background:#fff;border-radius:12px;border:1px solid #e2e6ea;padding:16px;margin-bottom:12px}
+.ptitle{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+label{display:block;font-size:12px;font-weight:500;color:#555;margin-bottom:4px;margin-top:10px}
+label:first-of-type{margin-top:0}
+input[type=text],input[type=date],select{width:100%;padding:10px 12px;border:1px solid #dde1e7;border-radius:8px;font-size:15px;color:#1a1a1a;background:#fafbfc;outline:none;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{border-color:#4a90d9;background:#fff}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.pe{background:#f7f9fb;border:1px solid #e2e6ea;border-radius:10px;padding:12px;margin-bottom:8px}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pn{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em}
+.rb{background:none;border:1px solid #e2e6ea;border-radius:6px;font-size:12px;color:#999;cursor:pointer;padding:3px 10px}
+.ab{width:100%;padding:12px;border:1.5px dashed #ccd3da;border-radius:10px;background:none;font-size:14px;color:#888;cursor:pointer;margin-top:4px}
+.btn{width:100%;padding:14px;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
+.dark{background:#1a2840;color:#e8f0ff}
+.light{background:#f0f2f5;color:#666;border:1px solid #dde1e7;margin-top:10px}
+.wrap{display:flex;flex-direction:column;align-items:center;padding:8px 0 16px}
+.inst{font-size:12px;color:#888;text-align:center;margin-bottom:14px;line-height:1.6;padding:0 8px}
+.card{background:#080d18;border-radius:16px;padding:20px 18px 16px;width:340px}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.cbn{font-size:15px;font-weight:600;color:#e8f0ff;letter-spacing:.02em}
+.cbs{font-size:10px;color:#6a7e9a;margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.cd{background:#111826;border:.5px solid #1e2d47;border-radius:8px;padding:5px 10px;font-size:11px;color:#8896b0;white-space:nowrap}
+.div{height:.5px;background:#161e30;margin:11px 0}
+.sl{font-size:10px;font-weight:600;color:#4a6080;letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+.cp{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.cr{background:#0e1622;border:.5px solid #1a2840;border-radius:10px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between}
+.cl{display:flex;flex-direction:column;gap:3px}
+.cn{font-size:13px;font-weight:600;color:#e8f0ff}
+.cm{font-size:10px;color:#4a6080}
+.cm span{color:#6a8aaa}
+.crt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;margin-left:8px}
+.co{font-size:15px;font-weight:600;color:#4fc38a}
+.cb{font-size:10px;color:#e8f0ff;background:#111826;border:.5px solid #1a2840;border-radius:5px;padding:2px 6px;white-space:nowrap}
+.cs{display:flex;gap:6px;margin-bottom:12px}
+.cx{flex:1;background:#0e1622;border:.5px solid #1a2840;border-radius:10px;padding:7px 4px 6px;text-align:center}
+.cv{font-size:12px;font-weight:600;color:#e8f0ff;white-space:nowrap}
+.rp{color:#4fc38a}
+.rn{color:#e05a5a}
+.cxl{font-size:8px;color:#4a6080;margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
+.cf{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:.5px solid #161e30}
+.cfh{font-size:11px;color:#4a6080}
+.ctw{display:flex;gap:4px}
+.ct{font-size:9px;color:#2a5070;background:#0d1828;border:.5px solid #1a3050;border-radius:5px;padding:2px 6px}
+.ce{font-size:11px;color:#2a3a50;text-align:center;padding:14px 0;font-style:italic}
+.tip{margin-top:14px;background:#fff;border-radius:10px;border:1px solid #e2e6ea;padding:12px 14px;width:340px;font-size:12px;color:#555;line-height:1.6}
+</style>
+</head>
+<body>
+<h1>No Hit Nostra</h1>
+<p class="sub">Daily card editor &middot; @nohitnostra</p>
+<div class="tabs">
+  <div class="tab on" onclick="show('editor')">Editor</div>
+  <div class="tab" onclick="show('preview')">Preview &amp; Screenshot</div>
+</div>
+<div id="editor" class="pane on">
+  <div class="panel">
+    <div class="ptitle">Card details</div>
+    <label>Date</label>
+    <input type="date" id="dt" oninput="render()">
+    <div class="r3" style="margin-top:10px">
+      <div><label>Record</label><input type="text" id="rec" placeholder="127-183" oninput="render()"></div>
+      <div><label>ROI</label><input type="text" id="roi" placeholder="+9.0%" oninput="render()"></div>
+      <div><label>Streak</label><input type="text" id="str" placeholder="W3" oninput="render()"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="ptitle">Picks</div>
+    <div id="pc"></div>
+    <button class="ab" onclick="addPick()">+ Add pick</button>
+  </div>
+  <div class="panel">
+    <button class="btn dark" onclick="show('preview')">View card preview</button>
+    <button class="btn light" onclick="reset()">Reset all fields</button>
+  </div>
+</div>
+<div id="preview" class="pane">
+  <div class="wrap">
+    <p class="inst"><strong>iPhone:</strong> Side button + volume up, then crop.<br><br><strong>Android:</strong> Power + volume down, then crop.</p>
+    <div id="out"></div>
+    <div class="tip">Crop tightly to the dark card edges before posting to Instagram.</div>
+  </div>
+  <button class="btn dark" style="margin-top:0" onclick="show('editor')">Back to editor</button>
+</div>
+<script>
+var BK=['DraftKings','Caesars','BetMGM','theScore Bet','Fanatics','Best available'];
+var pc=0;
+function show(n){
+  var tabs=document.querySelectorAll('.tab');
+  tabs[0].className='tab'+(n==='editor'?' on':'');
+  tabs[1].className='tab'+(n==='preview'?' on':'');
+  document.getElementById('editor').className='pane'+(n==='editor'?' on':'');
+  document.getElementById('preview').className='pane'+(n==='preview'?' on':'');
+  if(n==='preview')render();
+  window.scrollTo(0,0);
+}
+function addPick(){
+  pc++;
+  var id=pc;
+  var con=document.getElementById('pc');
+  var num=con.children.length+1;
+  var opts='';
+  for(var i=0;i<BK.length;i++)opts+='<option>'+BK[i]+'</option>';
+  var d=document.createElement('div');
+  d.className='pe';
+  d.id='pk'+id;
+  d.innerHTML='<div class="ph"><span class="pn">Pick '+num+'</span><button class="rb" onclick="del('+id+')">Remove</button></div>'
+    +'<label>Player name</label><input type="text" id="a'+id+'" placeholder="e.g. Marcus Semien" autocomplete="off" oninput="render()">'
+    +'<div class="r2" style="margin-top:8px"><div><label>Team</label><input type="text" id="b'+id+'" placeholder="e.g. TEX" autocomplete="off" oninput="render()"></div>'
+    +'<div><label>Odds</label><input type="text" id="c'+id+'" placeholder="+155" autocomplete="off" oninput="render()"></div></div>'
+    +'<label>Starting pitcher</label><input type="text" id="d'+id+'" placeholder="e.g. Framber Valdez" autocomplete="off" oninput="render()">'
+    +'<label>Best book</label><select id="e'+id+'" onchange="render()">'+opts+'</select>';
+  con.appendChild(d);
+  renum();
+}
+function del(id){
+  var el=document.getElementById('pk'+id);
+  if(el)el.remove();
+  renum();
+  render();
+}
+function renum(){
+  var items=document.querySelectorAll('.pe');
+  for(var i=0;i<items.length;i++){
+    var n=items[i].querySelector('.pn');
+    if(n)n.textContent='Pick '+(i+1);
+  }
+}
+function picks(){
+  var items=document.querySelectorAll('.pe');
+  var out=[];
+  for(var i=0;i<items.length;i++){
+    var id=items[i].id.replace('pk','');
+    var a=document.getElementById('a'+id);
+    var b=document.getElementById('b'+id);
+    var c=document.getElementById('c'+id);
+    var dd=document.getElementById('d'+id);
+    var e=document.getElementById('e'+id);
+    out.push({
+      name:a?a.value.trim():'',
+      team:b?b.value.trim().toUpperCase():'',
+      odds:c?c.value.trim():'',
+      pitcher:dd?dd.value.trim():'',
+      book:e?e.value:''
+    });
+  }
+  return out;
+}
+function fmtDate(v){
+  if(!v)return'';
+  var p=v.split('-');
+  var m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return m[parseInt(p[1])-1]+' '+parseInt(p[2])+', '+p[0];
+}
+function scol(s){
+  if(!s)return'#e8f0ff';
+  var u=s.toUpperCase();
+  if(u.charAt(0)==='W')return'#4fc38a';
+  if(u.charAt(0)==='L')return'#e05a5a';
+  return'#e8f0ff';
+}
+function rcls(v){
+  var n=parseFloat(v.replace('%','').replace('+',''));
+  if(isNaN(n))return'';
+  return n>0?'rp':n<0?'rn':'';
+}
+function render(){
+  var date=document.getElementById('dt').value;
+  var rec=document.getElementById('rec').value.trim();
+  var roi=document.getElementById('roi').value.trim();
+  var str=document.getElementById('str').value.trim();
+  var all=picks();
+  var valid=[];
+  for(var i=0;i<all.length;i++){if(all[i].name)valid.push(all[i]);}
+  var cnt=valid.length;
+  var pl=cnt===1?'1 play':cnt+' plays';
+  var ph='';
+  if(cnt===0){
+    ph='<div class="ce">Add picks in the editor tab</div>';
+  } else {
+    for(var j=0;j<valid.length;j++){
+      var p=valid[j];
+      var meta='';
+      if(p.team)meta+='<span>'+p.team+'</span>';
+      if(p.pitcher)meta+=(p.team?' &middot; ':'')+' <span>vs. '+p.pitcher+'</span>';
+      ph+='<div class="cr"><div class="cl"><span class="cn">'+p.name+'</span><span class="cm">'+meta+'</span></div>'
+        +'<div class="crt"><span class="co">'+(p.odds||'&mdash;')+'</span><span class="cb">'+p.book+'</span></div></div>';
+    }
+  }
+  var sc=scol(str);
+  var se='';
+  if(str){var u=str.toUpperCase();if(u.charAt(0)==='W')se=' \uD83D\uDD25';else if(u.charAt(0)==='L')se=' \uD83E\uDD76';}
+  var rc=rcls(roi);
+  var html='<div class="card">'
+    +'<div class="ch"><div><div class="cbn">No Hit Nostra</div><div class="cbs">Under 0.5 Hits &middot; MLB Props</div></div>'
+    +'<div class="cd">'+(fmtDate(date)||'Date')+'</div></div>'
+    +'<div class="div"></div>'
+    +'<div class="sl">Today\'s picks &middot; '+pl+'</div>'
+    +'<div class="cp">'+ph+'</div>'
+    +'<div class="div"></div>'
+    +'<div class="sl">2026 season</div>'
+    +'<div class="cs">'
+    +'<div class="cx"><div class="cv">'+(rec||'&mdash;')+'</div><div class="cxl">Record</div></div>'
+    +'<div class="cx"><div class="cv '+rc+'">'+(roi||'&mdash;')+'</div><div class="cxl">ROI</div></div>'
+    +'<div class="cx"><div class="cv" style="color:'+sc+'">'+(str?str+se:'&mdash;')+'</div><div class="cxl">Streak</div></div>'
+    +'</div>'
+    +'<div class="cf"><span class="cfh">@nohitnostra</span>'
+    +'<div class="ctw"><span class="ct">#MLBProps</span><span class="ct">#NoHitNostra</span></div></div>'
+    +'</div>';
+  document.getElementById('out').innerHTML=html;
+}
+function reset(){
+  if(!confirm('Reset all fields?'))return;
+  document.getElementById('dt').value=new Date().toISOString().split('T')[0];
+  document.getElementById('rec').value='';
+  document.getElementById('roi').value='';
+  document.getElementById('str').value='';
+  document.getElementById('pc').innerHTML='';
+  pc=0;
+  addPick();addPick();addPick();
+  render();
+}
+document.getElementById('dt').value=new Date().toISOString().split('T')[0];
+addPick();addPick();addPick();
+render();
+</script>
+</body>
+</html>
