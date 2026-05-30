@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>No Hit Nostra</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a1a; min-height: 100vh; padding: 16px 16px 60px; }
+h1 { font-size: 17px; font-weight: 600; color: #111; margin-bottom: 2px; }
+.subtitle { font-size: 12px; color: #888; margin-bottom: 18px; }
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.tab { flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid #dde1e7; font-size: 13px; font-weight: 500; cursor: pointer; background: #fff; color: #666; text-align: center; }
+.tab.active { background: #1a2840; color: #e8f0ff; border-color: #1a2840; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.panel { background: #fff; border-radius: 12px; border: 1px solid #e2e6ea; padding: 16px; margin-bottom: 12px; }
+.panel-title { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+label { display: block; font-size: 12px; font-weight: 500; color: #555; margin-bottom: 4px; margin-top: 10px; }
+label:first-of-type { margin-top: 0; }
+input[type="text"], input[type="date"], select { width: 100%; padding: 10px 12px; border: 1px solid #dde1e7; border-radius: 8px; font-size: 15px; color: #1a1a1a; background: #fafbfc; outline: none; -webkit-appearance: none; appearance: none; }
+input:focus, select:focus { border-color: #4a90d9; background: #fff; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.pick-entry { background: #f7f9fb; border: 1px solid #e2e6ea; border-radius: 10px; padding: 12px; margin-bottom: 8px; }
+.pick-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.pick-num { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.remove-btn { background: none; border: 1px solid #e2e6ea; border-radius: 6px; font-size: 12px; color: #999; cursor: pointer; padding: 3px 10px; }
+.add-btn { width: 100%; padding: 12px; border: 1.5px dashed #ccd3da; border-radius: 10px; background: none; font-size: 14px; color: #888; cursor: pointer; margin-top: 4px; }
+.action-btn { width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+.btn-preview { background: #1a2840; color: #e8f0ff; }
+.btn-reset { background: #f0f2f5; color: #666; border: 1px solid #dde1e7; margin-top: 10px; }
+.card-wrapper { display: flex; flex-direction: column; align-items: center; padding: 8px 0 16px; }
+.card-instructions { font-size: 12px; color: #888; text-align: center; margin-bottom: 14px; line-height: 1.6; padding: 0 8px; }
+.card { background: #080d18; border-radius: 16px; padding: 20px 18px 16px; width: 340px; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+.card-brand-name { font-size: 15px; font-weight: 600; color: #e8f0ff; letter-spacing: 0.02em; }
+.card-brand-sub { font-size: 10px; color: #6a7e9a; margin-top: 2px; letter-spacing: 0.05em; text-transform: uppercase; }
+.card-date { background: #111826; border: 0.5px solid #1e2d47; border-radius: 8px; padding: 5px 10px; font-size: 11px; color: #8896b0; white-space: nowrap; }
+.card-divider { height: 0.5px; background: #161e30; margin: 11px 0; }
+.card-section-label { font-size: 10px; font-weight: 600; color: #4a6080; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 9px; }
+.card-picks { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.card-pick { background: #0e1622; border: 0.5px solid #1a2840; border-radius: 10px; padding: 9px 11px; display: flex; align-items: center; justify-content: space-between; }
+.card-pick-left { display: flex; flex-direction: column; gap: 3px; }
+.card-pick-player { font-size: 13px; font-weight: 600; color: #e8f0ff; }
+.card-pick-meta { font-size: 10px; color: #4a6080; }
+.card-pick-meta span { color: #6a8aaa; }
+.card-pick-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; margin-left: 8px; }
+.card-pick-odds { font-size: 15px; font-weight: 600; color: #4fc38a; }
+/* Book now matches player name color #e8f0ff */
+.card-pick-book { font-size: 10px; color: #e8f0ff; background: #111826; border: 0.5px solid #1a2840; border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+.card-stats { display: flex; gap: 6px; margin-bottom: 12px; }
+.card-stat { flex: 1; background: #0e1622; border: 0.5px solid #1a2840; border-radius: 10px; padding: 7px 4px 6px; text-align: center; }
+.card-stat-val { font-size: 12px; font-weight: 600; color: #e8f0ff; white-space: nowrap; }
+.roi-pos { color: #4fc38a !important; }
+.roi-neg { color: #e05a5a !important; }
+.card-stat-label { font-size: 8px; color: #4a6080; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 0.5px solid #161e30; }
+.card-handle { font-size: 11px; color: #4a6080; }
+.card-tags { display: flex; gap: 4px; }
+.card-tag { font-size: 9px; color: #2a5070; background: #0d1828; border: 0.5px solid #1a3050; border-radius: 5px; padding: 2px 6px; }
+.card-disclaimer { font-size: 8px; color: #2a3a50; text-align: center; margin-top: 8px; }
+.card-empty { font-size: 11px; color: #2a3a50; text-align: center; padding: 14px 0; font-style: italic; }
+.screenshot-tip { margin-top: 14px; background: #fff; border-radius: 10px; border: 1px solid #e2e6ea; padding: 12px 14px; width: 340px; }
+.screenshot-tip p { font-size: 12px; color: #555; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<h1>No Hit Nostra</h1>
+<p class="subtitle">Daily card editor · @nohitnostra</p>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('editor')">Editor</div>
+  <div class="tab" onclick="switchTab('preview')">Preview &amp; Screenshot</div>
+</div>
+
+<div id="tab-editor" class="tab-content active">
+  <div class="panel">
+    <div class="panel-title">Card details</div>
+    <label>Date</label>
+    <input type="date" id="cardDate" oninput="renderCard()">
+    <div class="row3" style="margin-top:10px">
+      <div><label>Record</label><input type="text" id="record" placeholder="127-183" oninput="renderCard()"></div>
+      <div><label>ROI</label><input type="text" id="roi" placeholder="+9.0%" oninput="renderCard()"></div>
+      <div><label>Streak</label><input type="text" id="streak" placeholder="W3" oninput="renderCard()"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">Picks</div>
+    <div id="picks-container"></div>
+    <button class="add-btn" onclick="addPick()">+ Add pick</button>
+  </div>
+  <div class="panel">
+    <button class="action-btn btn-preview" onclick="switchTab('preview')">View card preview</button>
+    <button class="action-btn btn-reset" onclick="resetAll()">Reset all fields</button>
+  </div>
+</div>
+
+<div id="tab-preview" class="tab-content">
+  <div class="card-wrapper">
+    <p class="card-instructions">
+      <strong>iPhone:</strong> Side button + volume up simultaneously, then crop to the card.<br><br>
+      <strong>Android:</strong> Power + volume down, then crop.
+    </p>
+    <div id="card-output"></div>
+    <div class="screenshot-tip">
+      <p>Crop tightly to the dark card edges before posting to Instagram. Portrait crop works best.</p>
+    </div>
+  </div>
+  <div style="padding:0 0 8px">
+    <button class="action-btn btn-preview" onclick="switchTab('editor')" style="margin-top:0">Back to editor</button>
+  </div>
+</div>
+
+<script>
+var BOOKS = ['DraftKings','Caesars','BetMGM','theScore Bet','Fanatics','Best available'];
+var pickCount = 0;
+
+function switchTab(name) {
+  var tabs = document.querySelectorAll('.tab');
+  tabs[0].classList.toggle('active', name === 'editor');
+  tabs[1].classList.toggle('active', name === 'preview');
+  document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'preview') renderCard();
+  window.scrollTo(0, 0);
+}
+
+function addPick() {
+  pickCount++;
+  var id = pickCount;
+  var container = document.getElementById('picks-container');
+  var num = container.children.length + 1;
+  var opts = BOOKS.map(function(b) { return '<option>' + b + '</option>'; }).join('');
+  var div = document.createElement('div');
+  div.className = 'pick-entry';
+  div.id = 'pick-' + id;
+  div.innerHTML =
+    '<div class="pick-header">' +
+      '<span class="pick-num">Pick ' + num + '</span>' +
+      '<button class="remove-btn" onclick="removePick(' + id + ')">Remove</button>' +
+    '</div>' +
+    '<label>Player name</label>' +
+    '<input type="text" id="p' + id + '-player" placeholder="e.g. Marcus Semien" autocomplete="off" oninput="renderCard()">' +
+    '<div class="row2" style="margin-top:8px">' +
+      '<div><label>Team</label><input type="text" id="p' + id + '-team" placeholder="e.g. TEX" autocomplete="off" oninput="renderCard()"></div>' +
+      '<div><label>Odds</label><input type="text" id="p' + id + '-odds" placeholder="+155" autocomplete="off" oninput="renderCard()"></div>' +
+    '</div>' +
+    '<label>Starting pitcher</label>' +
+    '<input type="text" id="p' + id + '-pitcher" placeholder="e.g. Framber Valdez" autocomplete="off" oninput="renderCard()">' +
+    '<label>Best book</label>' +
+    '<select id="p' + id + '-book" onchange="renderCard()">' + opts + '</select>';
+  container.appendChild(div);
+  renumberPicks();
+}
+
+function removePick(id) {
+  var el = document.getElementById('pick-' + id);
+  if (el) { el.remove(); }
+  renumberPicks();
+  renderCard();
+}
+
+function renumberPicks() {
+  var entries = document.querySelectorAll('.pick-entry');
+  for (var i = 0; i < entries.length; i++) {
+    var n = entries[i].querySelector('.pick-num');
+    if (n) n.textContent = 'Pick ' + (i + 1);
+  }
+}
+
+function getPicks() {
+  var entries = document.querySelectorAll('.pick-entry');
+  var result = [];
+  for (var i = 0; i < entries.length; i++) {
+    var id = entries[i].id.replace('pick-', '');
+    var p = document.getElementById('p' + id + '-player');
+    var t = document.getElementById('p' + id + '-team');
+    var o = document.getElementById('p' + id + '-odds');
+    var pi = document.getElementById('p' + id + '-pitcher');
+    var b = document.getElementById('p' + id + '-book');
+    result.push({
+      player:  p  ? p.value.trim()  : '',
+      team:    t  ? t.value.trim().toUpperCase() : '',
+      odds:    o  ? o.value.trim()  : '',
+      pitcher: pi ? pi.value.trim() : '',
+      book:    b  ? b.value         : ''
+    });
+  }
+  return result;
+}
+
+function formatDate(val) {
+  if (!val) return '';
+  var parts = val.split('-');
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[parseInt(parts[1]) - 1] + ' ' + parseInt(parts[2]) + ', ' + parts[0];
+}
+
+function streakColor(s) {
+  if (!s) return '#e8f0ff';
+  var u = s.toUpperCase();
+  if (u.charAt(0) === 'W') return '#4fc38a';
+  if (u.charAt(0) === 'L') return '#e05a5a';
+  return '#e8f0ff';
+}
+
+function roiClass(val) {
+  var n = parseFloat(val.replace('%', '').replace('+', ''));
+  if (isNaN(n)) return '';
+  if (n > 0) return 'roi-pos';
+  if (n < 0) return 'roi-neg';
+  return '';
+}
+
+function renderCard() {
+  var date   = document.getElementById('cardDate').value;
+  var record = document.getElementById('record').value.trim();
+  var roi    = document.getElementById('roi').value.trim();
+  var streak = document.getElementById('streak').value.trim();
+  var all    = getPicks();
+  var picks  = [];
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].player) picks.push(all[i]);
+  }
+  var count = picks.length;
+  var playsLabel = count === 1 ? '1 play' : count + ' plays';
+
+  var picksHTML = '';
+  if (count === 0) {
+    picksHTML = '<div class="card-empty">Add picks in the editor tab</div>';
+  } else {
+    for (var j = 0; j < picks.length; j++) {
+      var p = picks[j];
+      var meta = '';
+      if (p.team) meta += '<span>' + p.team + '</span>';
+      if (p.pitcher) meta += (p.team ? ' &middot; ' : '') + '<span>vs. ' + p.pitcher + '</span>';
+      picksHTML +=
+        '<div class="card-pick">' +
+          '<div class="card-pick-left">' +
+            '<span class="card-pick-player">' + p.player + '</span>' +
+            '<span class="card-pick-meta">' + meta + '</span>' +
+          '</div>' +
+          '<div class="card-pick-right">' +
+            '<span class="card-pick-odds">' + (p.odds || '&mdash;') + '</span>' +
+            '<span class="card-pick-book">' + p.book + '</span>' +
+          '</div>' +
+        '</div>';
+    }
+  }
+
+  var sColor = streakColor(streak);
+  var streakEmoji = '';
+  if (streak && streak.toUpperCase().charAt(0) === 'W') streakEmoji = ' \uD83D\uDD25';
+  if (streak && streak.toUpperCase().charAt(0) === 'L') streakEmoji = ' \uD83E\uDD76';
+
+  var html =
+    '<div class="card">' +
+      '<div class="card-header">' +
+        '<div>' +
+          '<div class="card-brand-name">No Hit Nostra</div>' +
+          '<div class="card-brand-sub">Under 0.5 Hits &middot; MLB Props</div>' +
+        '</div>' +
+        '<div class="card-date">' + (formatDate(date) || 'Date') + '</div>' +
+      '</div>' +
+      '<div class="card-divider"></div>' +
+      '<div class="card-section-label">Today\'s picks &middot; ' + playsLabel + '</div>' +
+      '<div class="card-picks">' + picksHTML + '</div>' +
+      '<div class="card-divider"></div>' +
+      '<div class="card-section-label">2026 season</div>' +
+      '<div class="card-stats">' +
+        '<div class="card-stat"><div class="card-stat-val">' + (record || '&mdash;') + '</div><div class="card-stat-label">Record</div></div>' +
+        '<div class="card-stat"><div class="card-stat-val ' + roiClass(roi) + '">' + (roi || '&mdash;') + '</div><div class="card-stat-label">ROI</div></div>' +
+        '<div class="card-stat"><div class="card-stat-val" style="color:' + sColor + '">' + (streak ? streak + streakEmoji : '&mdash;') + '</div><div class="card-stat-label">Streak</div></div>' +
+      '</div>' +
+      '<div class="card-footer">' +
+        '<span class="card-handle">@nohitnostra</span>' +
+        '<div class="card-tags">' +
+          '<span class="card-tag">#MLBProps</span>' +
+          '<span class="card-tag">#NoHitNostra</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  document.getElementById('card-output').innerHTML = html;
+}
+
+function resetAll() {
+  if (!confirm('Reset all fields?')) return;
+  document.getElementById('cardDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('record').value = '';
+  document.getElementById('roi').value = '';
+  document.getElementById('streak').value = '';
+  document.getElementById('picks-container').innerHTML = '';
+  pickCount = 0;
+  addPick(); addPick(); addPick();
+  renderCard();
+}
+
+document.getElementById('cardDate').value = new Date().toISOString().split('T')[0];
+addPick(); addPick(); addPick();
+renderCard();
+</script>
+</body>
+</html>
